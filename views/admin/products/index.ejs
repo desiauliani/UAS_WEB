@@ -1,0 +1,108 @@
+<%- include('../../layouts/header') %>
+<%- include('../../layouts/navbar') %>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Kelola Katalog Produk</h2>
+        <button class="btn btn-pink rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#addProductModal">
+            + Tambah Produk Baru
+        </button>
+    </div>
+
+    <div class="card card-theme border-0 shadow-sm p-4">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Gambar</th>
+                        <th>Nama</th>
+                        <th>Kategori</th>
+                        <th>Harga</th>
+                        <th>Stok</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (typeof products !== 'undefined' && products.length > 0) { %>
+                        <% products.forEach(product => { %>
+                        <tr>
+                            <td>
+                                <!-- Path gambar diperbaiki di sini -->
+                                <img src="<%= product.gambar %>" width="60" height="60" class="rounded" style="object-fit: cover;">
+                            </td>
+                            <td><%= product.nama %></td>
+                            <td><%= product.category ? product.category.nama : 'Tanpa Kategori' %></td>
+                            <td>Rp <%= product.harga ? product.harga.toLocaleString('id-ID') : '0' %></td>
+                            <td><%= product.stok %></td>
+                            <td class="text-center">
+                                <a href="/admin/products/edit/<%= product.id %>" class="btn btn-sm btn-outline-primary me-2">Edit</a>
+                                <form action="/admin/products/<%= product.id %>?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus produk ini?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">Belum ada produk yang ditambahkan.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tambah Produk -->
+<div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content card-theme">
+            <form action="/admin/products" method="POST" enctype="multipart/form-data">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Tambah Produk Baru</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nama Produk</label>
+                        <input type="text" name="nama" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kategori</label>
+                        <select name="categoryId" class="form-select" required>
+                            <option value="">Pilih Kategori</option>
+                            <% if (typeof categories !== 'undefined' && categories.length > 0) { 
+                                categories.forEach(cat => { %>
+                                <option value="<%= cat.id %>"><%= cat.nama %></option>
+                            <% }) } %>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Harga (Rp)</label>
+                            <input type="number" name="harga" class="form-control" min="0" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Stok</label>
+                            <input type="number" name="stok" class="form-control" min="0" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Deskripsi</label>
+                        <textarea name="deskripsi" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Foto Produk</label>
+                        <input type="file" name="gambar" class="form-control" accept="image/*" required>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-pink text-white">Simpan Produk</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- include('../../layouts/footer') %>

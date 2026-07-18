@@ -1,0 +1,94 @@
+<%- include('../layouts/header') %>
+<%- include('../layouts/navbar') %>
+
+<div class="container py-5 fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 style="font-family: 'Playfair Display', serif; color: var(--color-rosegold);">
+            Dashboard Overview
+        </h2>
+        <span class="text-muted"><%= new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) %></span>
+    </div>
+
+    <!-- Statistik Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card bg-white border-0 shadow-sm h-100" style="border-left: 4px solid #b76e79 !important;">
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase small fw-bold">Total Pendapatan</h6>
+                    <h3 class="fw-bold mb-0" style="color: var(--color-rosegold);">Rp <%= totalRevenue.toLocaleString('id-ID') %></h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-white border-0 shadow-sm h-100" style="border-left: 4px solid #17a2b8 !important;">
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase small fw-bold">Pesanan Masuk</h6>
+                    <h3 class="fw-bold text-info mb-0"><%= countOrders %></h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-white border-0 shadow-sm h-100" style="border-left: 4px solid #28a745 !important;">
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase small fw-bold">Total Produk</h6>
+                    <h3 class="fw-bold text-success mb-0"><%= countProducts %></h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-white border-0 shadow-sm h-100" style="border-left: 4px solid #ffc107 !important;">
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase small fw-bold">Pelanggan Aktif</h6>
+                    <h3 class="fw-bold text-warning mb-0"><%= countUsers %></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pesanan Terbaru -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white border-0 pt-4 pb-0 px-4">
+            <h5 class="fw-bold">Pesanan Terbaru</h5>
+        </div>
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Pelanggan</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Tanggal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% recentOrders.forEach(order => { %>
+                            <tr>
+                                <td class="fw-bold">#ORD-<%= order.id %></td>
+                                <td><%= order.user.nama %></td>
+                                <td>Rp <%= order.total.toLocaleString('id-ID') %></td>
+                                <td>
+                                    <% 
+                                        let badgeClass = 'bg-secondary';
+                                        if(order.status === 'Pending') badgeClass = 'bg-warning text-dark';
+                                        if(order.status === 'Diproses') badgeClass = 'bg-info text-dark';
+                                        if(order.status === 'Dikirim') badgeClass = 'bg-primary';
+                                        if(order.status === 'Selesai') badgeClass = 'bg-success';
+                                    %>
+                                    <span class="badge <%= badgeClass %>"><%= order.status %></span>
+                                </td>
+                                <td class="text-muted small"><%= new Date(order.createdAt).toLocaleDateString('id-ID') %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-end mt-3">
+                <a href="/admin/orders" class="btn btn-sm btn-outline-primary">Lihat Semua Pesanan</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

@@ -1,0 +1,84 @@
+<%- include('../layouts/header') %>
+<%- include('../layouts/navbar') %>
+
+<!-- Header Katalog -->
+<div class="container-fluid py-5 text-center fade-in" style="background-color: var(--color-softpink);">
+    <h1 style="font-family: 'Playfair Display', serif; color: var(--color-rosegold);">Katalog Bunga</h1>
+    <p class="text-muted mb-0">Temukan rangkaian sempurna untuk setiap momen berharga Anda.</p>
+</div>
+
+<div class="container py-5 slide-up">
+    <!-- Filter & Pencarian -->
+    <div class="row mb-5 justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-3">
+                    <form action="/catalog" method="GET" class="row g-2 align-items-center">
+                        <div class="col-md-5">
+                            <input type="text" name="search" class="form-control" placeholder="Cari nama bunga..." value="<%= search || '' %>">
+                        </div>
+                        <div class="col-md-4">
+                            <select name="category" class="form-select text-muted">
+                                <option value="">Semua Kategori</option>
+                                <% categories.forEach(cat => { %>
+                                    <option value="<%= cat.id %>" <%= categoryId == cat.id ? 'selected' : '' %>><%= cat.nama %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary w-100">Cari <i class="bi bi-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid Produk -->
+    <div class="row g-4">
+        <% if (products.length > 0) { %>
+            <% products.forEach(product => { %>
+                <div class="col-md-3 col-sm-6 fade-in">
+                    <div class="card h-100">
+                        <!-- Label Kategori -->
+                        <div class="position-absolute top-0 end-0 m-3 badge shadow-sm" style="background-color: rgba(255,255,255,0.9); color: var(--color-rosegold);">
+                            <%= product.category.nama %>
+                        </div>
+                        
+                        <!-- Gambar Produk (Path Diperbaiki) -->
+                        <a href="/product/<%= product.id %>">
+                            <img src="<%= product.gambar %>" 
+                                 class="card-img-top" 
+                                 alt="<%= product.nama %>" 
+                                 style="height: 250px; object-fit: cover;">
+                        </a>
+                        
+                        <div class="card-body text-center d-flex flex-column">
+                            <h5 class="card-title text-truncate">
+                                <a href="/product/<%= product.id %>" class="text-decoration-none" style="color: var(--color-text);"><%= product.nama %></a>
+                            </h5>
+                            <p class="card-text fw-bold mb-3" style="color: var(--color-rosegold);">
+                                Rp <%= product.harga.toLocaleString('id-ID') %>
+                            </p>
+                            <form action="/cart/add/<%= product.id %>" method="POST" class="mt-auto">
+                                <input type="hidden" name="qty" value="1">
+                                <button type="submit" class="btn btn-outline-primary w-100 rounded-pill">
+                                    <i class="bi bi-cart-plus"></i> Masukkan Keranjang
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-flower3 display-1 text-muted opacity-25"></i>
+                <h4 class="mt-3 text-muted">Produk tidak ditemukan</h4>
+                <p class="text-muted">Coba gunakan kata kunci atau kategori lain.</p>
+                <a href="/catalog" class="btn btn-outline-primary mt-2">Reset Pencarian</a>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

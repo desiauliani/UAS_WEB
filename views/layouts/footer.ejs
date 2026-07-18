@@ -1,0 +1,59 @@
+<footer class="mt-5 py-5 text-center" style="background-color: var(--color-white); border-top: 1px solid var(--color-softpink);">
+        <div class="container">
+            <h4 class="mb-3" style="font-family: 'Playfair Display', serif; color: var(--color-rosegold);">
+                <i class="bi bi-flower1"></i> RHOPALOCERAZ
+            </h4>
+            <p class="text-muted mb-4" style="max-width: 600px; margin: auto;">
+                Menghadirkan keindahan dan emosi melalui rangkaian bunga segar premium. Dibuat dengan cinta untuk setiap momen berharga Anda.
+            </p>
+            <div class="d-flex justify-content-center gap-3 mb-4">
+                <a href="#" class="text-muted fs-4"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="text-muted fs-4"><i class="bi bi-whatsapp"></i></a>
+                <a href="#" class="text-muted fs-4"><i class="bi bi-facebook"></i></a>
+            </div>
+            <p class="text-muted small mb-0">&copy; 2026 Rhopaloceraz Premium Florist. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+    
+    <!-- Script untuk menangkap flash message dari Express Session dan menampilkannya sebagai Toast/Alert -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const successMsg = "<%= success_msg %>";
+            const errorMsg = "<%= error_msg %>";
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            if (successMsg && successMsg.length > 0) {
+                Toast.fire({
+                    icon: 'success',
+                    title: successMsg
+                });
+            }
+
+            if (errorMsg && errorMsg.length > 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: errorMsg,
+                    confirmButtonColor: '#b76e79'
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<%- include('../layouts/header') %>
+<%- include('../layouts/navbar') %>
+
+<div class="container py-5 fade-in">
+    <h2 class="mb-4" style="font-family: 'Playfair Display', serif; color: var(--color-rosegold);">
+        <i class="bi bi-cart3 me-2"></i> Keranjang Belanja
+    </h2>
+
+    <% if (cart && cart.length > 0) { %>
+        <div class="row">
+            <!-- Tabel Item Keranjang -->
+            <div class="col-lg-8 mb-4">
+                <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 text-center">
+                            <thead style="background-color: var(--color-softpink);">
+                                <tr>
+                                    <th class="py-3 font-weight-normal text-muted">Produk</th>
+                                    <th class="py-3 font-weight-normal text-muted">Harga</th>
+                                    <th class="py-3 font-weight-normal text-muted">Kuantitas</th>
+                                    <th class="py-3 font-weight-normal text-muted">Subtotal</th>
+                                    <th class="py-3 font-weight-normal text-muted">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% cart.forEach(item => { %>
+                                    <tr>
+                                        <td class="text-start p-3">
+                                            <div class="d-flex align-items-center">
+                                                <img src="/<%= item.gambar.startsWith('/') ? item.gambar.substring(1) : item.gambar %>" ... >
+                                                <a href="/product/<%= item.productId %>" class="fw-bold text-decoration-none" style="color: var(--color-text);"><%= item.nama %></a>
+                                            </div>
+                                        </td>
+                                        <td>Rp <%= item.harga.toLocaleString('id-ID') %></td>
+                                        <td>
+                                            <div class="d-flex justify-content-center align-items-center gap-2">
+                                                <form action="/cart/update/<%= item.productId %>" method="POST">
+                                                    <input type="hidden" name="action" value="decrease">
+                                                    <button type="submit" class="btn btn-sm btn-light border rounded-circle"><i class="bi bi-dash"></i></button>
+                                                </form>
+                                                <span class="fw-bold mx-2"><%= item.qty %></span>
+                                                <form action="/cart/update/<%= item.productId %>" method="POST">
+                                                    <input type="hidden" name="action" value="increase">
+                                                    <button type="submit" class="btn btn-sm btn-light border rounded-circle"><i class="bi bi-plus"></i></button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                        <td class="fw-bold" style="color: var(--color-rosegold);">
+                                            Rp <%= item.subtotal.toLocaleString('id-ID') %>
+                                        </td>
+                                        <td>
+                                            <a href="/cart/delete/<%= item.productId %>" class="btn btn-sm btn-outline-danger rounded-circle" title="Hapus">
+                                                <i class="bi bi-trash3"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ringkasan Belanja -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 rounded-4" style="background-color: var(--color-white); border-top: 4px solid var(--color-rosegold) !important;">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-4" style="font-family: 'Playfair Display', serif;">Ringkasan Belanja</h5>
+                        
+                        <div class="d-flex justify-content-between mb-3 text-muted">
+                            <span>Total Item</span>
+                            <span><%= cart.reduce((sum, item) => sum + item.qty, 0) %> Item</span>
+                        </div>
+                        <hr class="text-muted opacity-25">
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="fw-bold fs-5">Total Harga</span>
+                            <span class="fw-bold fs-5" style="color: var(--color-rosegold);">Rp <%= total.toLocaleString('id-ID') %></span>
+                        </div>
+                        
+                        <a href="/orders/checkout" class="btn btn-primary w-100 py-3 rounded-pill fw-bold fs-6">
+                            Lanjut ke Checkout <i class="bi bi-arrow-right-circle ms-2"></i>
+                        </a>
+                        <a href="/catalog" class="btn btn-link text-decoration-none w-100 mt-2 text-muted">
+                            <i class="bi bi-arrow-left me-1"></i> Lanjut Belanja
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } else { %>
+        <!-- Empty State -->
+        <div class="text-center py-5 slide-up">
+            <i class="bi bi-cart-x display-1 text-muted opacity-25"></i>
+            <h4 class="mt-4 text-muted">Keranjang belanja Anda masih kosong</h4>
+            <p class="text-muted mb-4">Yuk, temukan rangkaian bunga favorit Anda!</p>
+            <a href="/catalog" class="btn btn-primary rounded-pill px-5 py-2">Mulai Belanja</a>
+        </div>
+    <% } %>
+</div>
+
+<%- include('../layouts/footer') %>

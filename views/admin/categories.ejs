@@ -1,0 +1,58 @@
+<%- include('../layouts/header') %>
+<%- include('../layouts/navbar') %>
+
+<div class="container py-5 fade-in">
+    <div class="row">
+        <!-- Form Tambah Kategori -->
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm" style="border-top: 3px solid var(--color-rosegold);">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Tambah Kategori</h5>
+                    <form action="/admin/categories" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Nama Kategori</label>
+                            <input type="text" name="nama" class="form-control" required placeholder="Cth: Hand Bouquet">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Simpan Kategori</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabel Kategori -->
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Daftar Kategori</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Kategori</th>
+                                    <th class="text-end">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% categories.forEach((cat, index) => { %>
+                                    <tr>
+                                        <td><%= index + 1 %></td>
+                                        <td class="fw-medium"><%= cat.nama %></td>
+                                        <td class="text-end">
+                                            <!-- Form Hapus (Menggunakan method-override) -->
+                                            <form action="/admin/categories/<%= cat.id %>?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus kategori ini?');">
+                                                <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

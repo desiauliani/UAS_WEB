@@ -1,0 +1,175 @@
+<%- include('../layouts/header') %>
+
+<%- include('../layouts/navbar') %>
+
+
+
+<!-- HERO SECTION -->
+
+<section class="hero-section text-center text-white fade-in" style="background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1563241527-3004b7be0ffd?q=80&w=1920&auto=format&fit=crop') no-repeat center center/cover; padding: 120px 0;">
+
+    <div class="container slide-up">
+
+        <h1 class="display-3 fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--color-white); text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+
+            Keindahan dalam Setiap Kelopak
+
+        </h1>
+
+        <p class="lead mb-4 fs-4" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">
+
+            Hadirkan momen tak terlupakan dengan rangkaian bunga premium dari Rhopaloceraz.
+
+        </p>
+
+        <a href="/catalog" class="btn btn-primary btn-lg rounded-pill px-5 py-3 fs-5 shadow">Belanja Sekarang</a>
+
+    </div>
+
+</section>
+
+
+
+<!-- STORY OF RHOPALOCERAZ SECTION -->
+
+<section class="py-5" style="background-color: var(--color-softpink);">
+
+    <div class="container py-4">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-6 mb-4 mb-md-0 slide-up">
+
+                <img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?q=80&w=800&auto=format&fit=crop" alt="Rhopaloceraz Story" class="img-fluid rounded-4 shadow">
+
+            </div>
+
+            <div class="col-md-6 px-md-5 slide-up">
+
+                <h6 class="text-uppercase tracking-wide" style="color: var(--color-rosegold); letter-spacing: 2px;">Tentang Kami</h6>
+
+                <h2 class="mb-4" style="font-family: 'Playfair Display', serif; color: var(--color-text);">Makna di Balik Rhopaloceraz</h2>
+
+                <p class="text-muted" style="line-height: 1.8;">
+
+                    <strong>Rhopaloceraz</strong> terinspirasi dari <em>Rhopalocera</em>, klasifikasi ilmiah untuk kupu-kupu. Seperti kupu-kupu yang melambangkan transformasi, keanggunan, dan cinta yang rapuh namun indah, kami merangkai setiap bunga untuk menyampaikan emosi terdalam Anda.
+
+                </p>
+
+                <p class="text-muted" style="line-height: 1.8;">
+
+                    Setiap kelopak dipilih langsung dari kebun terbaik, dirangkai oleh artisan *florist* kami, dan dikirimkan dengan penuh kehati-hatian. Jadikan setiap momen perayaan, permintaan maaf, atau ungkapan cinta Anda menjadi sempurna bersama Rhopaloceraz.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- LATEST PRODUCTS SECTION -->
+
+<section class="py-5">
+
+    <div class="container py-4">
+
+        <div class="text-center mb-5 slide-up">
+
+            <h2 style="font-family: 'Playfair Display', serif;">Koleksi Terbaru Kami</h2>
+
+            <p class="text-muted">Rangkaian eksklusif minggu ini</p>
+
+        </div>
+
+
+
+        <div class="row g-4">
+
+            <% if (products.length > 0) { %>
+
+                <% products.forEach(product => { %>
+
+                    <div class="col-md-3 col-sm-6 fade-in">
+
+                        <div class="card h-100">
+
+                            <!-- Label Kategori -->
+
+                            <div class="position-absolute top-0 end-0 m-3 badge" style="background-color: rgba(255,255,255,0.8); color: var(--color-rosegold);">
+
+                                <%= product.category.nama %>
+
+                            </div>
+
+                            <a href="/product/<%= product.id %>">
+
+                                <img src="<%= product.gambar %>" class="card-img-top" alt="<%= product.nama %>">
+
+                            </a>
+
+                            <div class="card-body text-center d-flex flex-column">
+
+                                <h5 class="card-title text-truncate">
+
+                                    <a href="/product/<%= product.id %>" class="text-decoration-none" style="color: var(--color-text);"><%= product.nama %></a>
+
+                                </h5>
+
+                                <p class="card-text fw-bold mb-3" style="color: var(--color-rosegold);">
+
+                                    Rp <%= product.harga.toLocaleString('id-ID') %>
+
+                                </p>
+
+                                <form action="/cart/add/<%= product.id %>" method="POST" class="mt-auto">
+
+                                    <input type="hidden" name="qty" value="1">
+
+                                    <button type="submit" class="btn btn-outline-primary w-100 rounded-pill">
+
+                                        <i class="bi bi-cart-plus"></i> Masukkan Keranjang
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                <% }) %>
+
+            <% } else { %>
+
+                <div class="col-12 text-center text-muted">
+
+                    <p>Belum ada produk yang tersedia saat ini.</p>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+       
+
+        <div class="text-center mt-5 slide-up">
+
+            <a href="/catalog" class="btn btn-primary rounded-pill px-4">Lihat Semua Koleksi <i class="bi bi-arrow-right"></i></a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<%- include('../layouts/footer') %>

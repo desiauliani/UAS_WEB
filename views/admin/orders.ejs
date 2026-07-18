@@ -1,0 +1,47 @@
+<%- include('../layouts/header') %>
+<%- include('../layouts/navbar') %>
+
+<div class="container mt-4">
+    <!-- Tombol Kembali diarahkan ke route '/admin' -->
+<div class="mb-3">
+    <a href="/admin/dashboard" class="btn btn-secondary">« Kembali ke Dashboard</a>
+</div>
+
+    <h2><%= title %></h2>
+    <hr>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nama Pelanggan</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Tanggal</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (orders && orders.length > 0) { %>
+                <% orders.forEach(order => { %>
+                    <tr>
+                        <td><%= order.id %></td>
+                        <td><%= order.user ? order.user.nama : 'User Tidak Dikenal' %></td>
+                        <td>Rp <%= order.total.toLocaleString('id-ID') %></td>
+                        <td><%= order.status %></td>
+                        <td><%= new Date(order.createdAt).toLocaleDateString('id-ID') %></td>
+                        <td>
+                            <a href="/admin/orders/<%= order.id %>" class="btn btn-sm btn-info">Detail</a>
+                        </td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="6" class="text-center">Tidak ada pesanan ditemukan.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('../layouts/footer') %>

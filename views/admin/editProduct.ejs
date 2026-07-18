@@ -1,0 +1,75 @@
+<%- include('../layouts/header') %>
+
+<!-- Container utama (Ukuran diperkecil ke 450px agar lebih fokus) -->
+<div style="padding: 20px; max-width: 450px; margin: 40px auto; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    
+    <h2 style="text-align: center; color: #333; margin-bottom: 20px;">Edit Produk</h2>
+    
+    <!-- Form Action -->
+    <form action="/admin/products/<%= product.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+        
+        <!-- Field Nama Produk -->
+        <div style="margin-bottom: 12px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Nama Produk:</label>
+            <input type="text" name="nama" value="<%= product.nama %>" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+        </div>
+
+        <!-- Field Kategori -->
+        <div style="margin-bottom: 12px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Kategori:</label>
+            <select name="category_id" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                <% categories.forEach(cat => { %>
+                    <option value="<%= cat.id %>" <%= product.category_id === cat.id ? 'selected' : '' %>>
+                        <%= cat.nama %> 
+                    </option>
+                <% }) %>
+            </select>
+        </div>
+
+        <!-- Field Harga -->
+        <div style="margin-bottom: 12px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Harga (Rp):</label>
+            <input type="number" name="harga" value="<%= product.harga %>" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+        </div>
+
+        <!-- Field Stok -->
+        <div style="margin-bottom: 12px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Stok:</label>
+            <input type="number" name="stok" value="<%= product.stok %>" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+        </div>
+
+        <!-- Field Deskripsi -->
+        <div style="margin-bottom: 12px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Deskripsi:</label>
+            <textarea name="deskripsi" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; min-height: 70px;"><%= product.deskripsi %></textarea>
+        </div>
+
+        <!-- Field Status -->
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Status:</label>
+            <select name="status" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                <option value="Tersedia" <%= product.status === 'Tersedia' ? 'selected' : '' %>>Tersedia</option>
+                <option value="Habis" <%= product.status === 'Habis' ? 'selected' : '' %>>Habis</option>
+            </select>
+        </div>
+
+        <!-- Field Gambar -->
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 5px; color: #555;">Ganti Gambar (Opsional):</label>
+            <input type="file" name="gambar" accept="image/*" style="width: 100%; padding: 5px; border: 1px solid #ddd; border-radius: 5px; background-color: #fafafa;">
+        </div>
+
+        <!-- Tombol Aksi (Warna Baru) -->
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" style="background-color: #b76e79; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; flex: 1;">
+                Update
+            </button>
+            <a href="/admin/products" style="background-color: #d1c9ca; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; text-align: center; font-weight: bold; flex: 1;">
+                Batal
+            </a>
+        </div>
+        
+    </form>
+</div>
+
+<%- include('../layouts/footer') %>

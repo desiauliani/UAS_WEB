@@ -1,0 +1,104 @@
+<%- include('../layouts/header') %>
+<%- include('../layouts/navbar') %>
+
+<div class="container py-5 fade-in">
+    <div class="mb-4">
+        <a href="/admin/orders" class="text-decoration-none text-muted"><i class="bi bi-arrow-left"></i> Kembali ke Daftar Pesanan</a>
+    </div>
+
+    <div class="row">
+        <!-- Kolom Kiri: Detail & Item -->
+        <div class="col-lg-8 mb-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4 border-bottom pb-3">Informasi Pesanan #ORD-<%= order.id %></h5>
+                    
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <h6 class="text-muted small">Informasi Pelanggan</h6>
+                            <p class="mb-1 fw-bold"><i class="bi bi-person me-2"></i> <%= order.user.nama %></p>
+                            <p class="mb-0 text-muted"><i class="bi bi-envelope me-2"></i> <%= order.user.email %></p>
+                        </div>
+                        <div class="col-sm-6 text-sm-end mt-3 mt-sm-0">
+                            <h6 class="text-muted small">Waktu Pemesanan</h6>
+                            <p class="fw-bold mb-0"><%= new Date(order.createdAt).toLocaleString('id-ID') %></p>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold mb-3">Item yang Dipesan</h6>
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Produk</th>
+                                    <th>Harga</th>
+                                    <th>Qty</th>
+                                    <th class="text-end">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% order.orderDetails.forEach(item => { %>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="<%= item.product.gambar %>" class="rounded-2 me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                                <span><%= item.product.nama %></span>
+                                            </div>
+                                        </td>
+                                        <td>Rp <%= item.product.harga.toLocaleString('id-ID') %></td>
+                                        <td><%= item.qty %></td>
+                                        <td class="text-end fw-bold">Rp <%= item.subtotal.toLocaleString('id-ID') %></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kolom Kanan: Pembayaran & Update Status -->
+        <div class="col-lg-4">
+            <!-- Card Bukti Pembayaran -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3 border-bottom pb-2">Pembayaran</h5>
+                    <p class="mb-2"><span class="text-muted">Metode:</span> <strong><%= order.metode_pembayaran %></strong></p>
+                    <p class="mb-3"><span class="text-muted">Total:</span> <strong style="color: var(--color-rosegold); font-size: 1.2rem;">Rp <%= order.total.toLocaleString('id-ID') %></strong></p>
+                    
+                    <h6 class="text-muted small mb-2">Bukti Transfer:</h6>
+                    <% if (order.bukti_bayar) { %>
+                        <a href="/uploads/<%= order.bukti_bayar %>" target="_blank">
+                            <img src="/uploads/<%= order.bukti_bayar %>" class="img-fluid rounded-3 border" alt="Bukti Pembayaran">
+                        </a>
+                        <small class="d-block text-center mt-2 text-muted">Klik gambar untuk memperbesar</small>
+                    <% } else { %>
+                        <div class="alert alert-warning text-center small">Belum ada bukti pembayaran</div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Card Update Status -->
+            <div class="card border-0 shadow-sm rounded-4" style="background-color: var(--color-softpink);">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Tindakan Admin</h5>
+                    <form action="/admin/orders/<%= order.id %>/status?_method=PUT" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Ubah Status Pesanan</label>
+                            <select name="status" class="form-select border-0 shadow-sm">
+                                <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending (Menunggu Verifikasi)</option>
+                                <option value="Diproses" <%= order.status === 'Diproses' ? 'selected' : '' %>>Diproses (Sedang Dirangkai)</option>
+                                <option value="Dikirim" <%= order.status === 'Dikirim' ? 'selected' : '' %>>Dikirim (Dalam Perjalanan)</option>
+                                <option value="Selesai" <%= order.status === 'Selesai' ? 'selected' : '' %>>Selesai (Diterima)</option>
+                                <option value="Dibatalkan" <%= order.status === 'Dibatalkan' ? 'selected' : '' %>>Dibatalkan</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Update Status</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

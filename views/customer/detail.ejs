@@ -1,0 +1,122 @@
+<%- include('../layouts/header') %>
+<%- include('../layouts/navbar') %>
+
+<div class="container py-5 fade-in">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/" style="color: var(--color-rosegold);">Home</a></li>
+            <li class="breadcrumb-item"><a href="/catalog" style="color: var(--color-rosegold);">Katalog</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><%= product.nama %></li>
+        </ol>
+    </nav>
+
+    <!-- Detail Produk -->
+    <div class="row mb-5 bg-white p-4 rounded-4 shadow-sm">
+        <div class="col-md-5 mb-4 mb-md-0">
+            <%
+                // Logika pembersihan path gambar agar selalu valid di browser
+                // 1. Ganti \ jadi /
+                // 2. Hapus semua / atau \ di depan agar tidak duplikat
+                let cleanPath = product.gambar ? product.gambar.replace(/\\/g, '/').replace(/^[\/\\]+/, '') : '';
+                let finalSrc = '/' + cleanPath;
+            %>
+            <img src="<%= finalSrc %>" 
+                 alt="<%= product.nama %>" 
+                 class="img-fluid rounded-3 shadow-sm w-100" 
+                 style="object-fit: cover; border: 1px solid var(--color-softpink);">
+        </div>
+        <div class="col-md-7 px-md-4 d-flex flex-column justify-content-center">
+            <span class="badge mb-2 d-inline-block" style="background-color: var(--color-softpink); color: var(--color-rosegold); width: fit-content;">
+                <%= product.category.nama %>
+            </span>
+            <h2 class="mb-3" style="font-family: 'Playfair Display', serif;"><%= product.nama %></h2>
+            <h3 class="fw-bold mb-4" style="color: var(--color-rosegold);">Rp <%= product.harga.toLocaleString('id-ID') %></h3>
+            
+            <p class="text-muted lh-lg mb-4"><%= product.deskripsi %></p>
+            
+            <p class="mb-4 text-muted">
+                <i class="bi bi-box-seam me-2"></i>Stok Tersedia: <strong class="<%= product.stok > 0 ? 'text-success' : 'text-danger' %>"><%= product.stok %></strong>
+            </p>
+
+            <% if (product.stok > 0) { %>
+                <form action="/cart/add/<%= product.id %>" method="POST" class="d-flex align-items-center gap-3 p-3 rounded-3" style="background-color: var(--color-cream);">
+                    <div class="input-group" style="width: 130px;">
+                        <span class="input-group-text bg-white">Qty</span>
+                        <input type="number" name="qty" class="form-control text-center" value="1" min="1" max="<%= product.stok %>">
+                    </div>
+                    <button type="submit" class="btn btn-primary px-4 flex-grow-1">
+                        <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
+                    </button>
+                </form>
+            <% } else { %>
+                <div class="alert alert-danger text-center">
+                    <i class="bi bi-exclamation-circle me-2"></i> Maaf, stok produk ini sedang habis.
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Review Section -->
+    <div class="row slide-up">
+        <div class="col-12">
+            <h4 class="mb-4" style="font-family: 'Playfair Display', serif; border-bottom: 2px solid var(--color-softpink); padding-bottom: 10px;">
+                Ulasan Pelanggan (<%= product.reviews.length %>)
+            </h4>
+            
+            <% if (product.reviews.length > 0) { %>
+                <div class="row g-3 mb-4">
+                    <% product.reviews.forEach(review => { %>
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light p-3 h-100 rounded-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0 fw-bold"><i class="bi bi-person-circle me-2 text-muted"></i><%= review.user.nama %></h6>
+                                    <div style="color: #ffc107;">
+                                        <% for(let i=0; i<5; i++) { %>
+                                            <i class="bi bi-star-fill <%= i < review.rating ? '' : 'text-muted opacity-25' %>"></i>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <p class="text-muted mb-0 small fst-italic">"<%= review.komentar %>"</p>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <p class="text-muted mb-4">Belum ada ulasan untuk produk ini.</p>
+            <% } %>
+
+            <!-- Form Tambah Review -->
+            <% if (user && user.role === 'customer') { %>
+                <div class="card border-0 shadow-sm" style="border-top: 3px solid var(--color-rosegold);">
+                    <div class="card-body p-4">
+                        <h6 class="fw-bold mb-3">Tulis Ulasan Anda</h6>
+                        <form action="/review/add/<%= product.id %>" method="POST">
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">Rating (1-5)</label>
+                                <select name="rating" class="form-select w-auto" required>
+                                    <option value="5">5 - Sangat Bagus</option>
+                                    <option value="4">4 - Bagus</option>
+                                    <option value="3">3 - Cukup</option>
+                                    <option value="2">2 - Kurang</option>
+                                    <option value="1">1 - Buruk</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">Komentar</label>
+                                <textarea name="komentar" class="form-control" rows="3" required placeholder="Bagaimana pendapat Anda tentang bunga ini?"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-outline-primary btn-sm px-4">Kirim Ulasan</button>
+                        </form>
+                    </div>
+                </div>
+            <% } else if (!user) { %>
+                <div class="alert alert-light border text-center text-muted">
+                    Silakan <a href="/auth/login" class="fw-bold" style="color: var(--color-rosegold);">Login</a> untuk memberikan ulasan.
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>
